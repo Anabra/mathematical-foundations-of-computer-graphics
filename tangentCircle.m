@@ -132,6 +132,13 @@ endfunction
 
 ########################### 3-dimensional ###########################
 
+function N = normc(M) 
+  for i = 1:columns(M)
+    v = M(:,i);
+    N(:,i) = v ./ norm(v);
+  end
+end
+
 # f : R -> [R;R]
 # TODO: implement this using recursion
 function DS = diffCurve3(f, ts, n = 1)
@@ -173,8 +180,9 @@ function [CPS, RS, ES, NS] = tangentCircle3(f, ts)
   dFS  = diffCurve3(f, ts, 1)(:, 1:end-1);
   ddFS = diffCurve3(f, ts, 2);
   
-  ES = dFS ./ norm(dFS);
+  ES = normc(dFS);
   NS = ddFS .- dot(ddFS, ES).*ES;
+  NS = normc(NS);
   
   VS  = v3(f, ts)(1:end-1);
   VS2 = VS .^ 2;
@@ -258,6 +266,12 @@ end
 
 ### Examples
 
+function FUN = ellipse2D(a,b)
+  FUN = @(ts) [ a*cos(ts)
+              ; b*sin(ts)
+              ];
+end
+
 # logSpiral = @(x) [(e.^x).*cos(x); (e.^x).*sin(x)];
 function FUN = logSpiral3D(a,b)
   r   = @(ts) a*(e.^(b*ts));
@@ -283,3 +297,10 @@ end
 function FUN = viviani()
   FUN = @(ts) [cos(ts).^2; cos(ts).*sin(ts); sin(ts)];
 end
+
+################################## examples ####################################
+
+# plotTangentCircle2(ellipse2D(5,3), linspace(0, 2*pi, 1000));
+# plotTangentCircle3(simpleHelix3D(3, 2), linspace(0, 6*pi, 1000));
+# plotTangentCircle3(logSpiral3D(1, 0.1), linspace(0, 6*pi, 1000));
+# plotTangentCircle3(viviani(), linspace(0, 2*pi, 1000));
