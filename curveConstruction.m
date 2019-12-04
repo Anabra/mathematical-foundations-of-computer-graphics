@@ -26,18 +26,20 @@ function ODEs = mkDiffEqSystem(t, y, v, kappa, tau)
 end
 
 function testSimpleHelix(a,b)
-  v     = @(t) sqrt(a^2 + b^2);
-  kappa = @(t) abs(a) / (a^2 + b^2);
-  tau   = @(t) b / (a^2 + b^2);
+  c     = a^2 + b^2;
+  
+  v     = @(t) sqrt(c);
+  kappa = @(t) abs(a) / (c);
+  tau   = @(t) b / (c);
   
   range = linspace(0,6*pi,1000);
 
   simpleHelix = simpleHelix3D(a,b)(range);
   
-  e0  = [0, 1/sqrt(2), 1/sqrt(2)];
+  e0  = [0, a/sqrt(c), b/sqrt(c)];
   n0  = [-1, 0, 0];
-  b0  = [0, -1/sqrt(2), 1/sqrt(2)];
-  fi0 = [1,0,0];
+  b0  = [0, -b/sqrt(c), a/sqrt(c)];
+  fi0 = [a,0,0];
   curve = constructCurve(v, kappa, tau, range, e0, n0, b0, fi0)';
   
   # simpleHelix = simpleHelix + (curve(:,1) - simpleHelix(:,1));
