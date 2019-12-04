@@ -214,7 +214,7 @@ function plotCircle3(cp, r, v1, v2)
   ONB = orth([v1,v2]);
   V1 = ONB(:,1);
   V2 = ONB(:,2);
-  circle = cp + r*(cos(ps) .* V1) + (sin(ps) .* V2);
+  circle = cp + r*(cos(ps) .* V1) + r*(sin(ps) .* V2);
   
   plot3(circle(1,:), circle(2,:), circle(3,:));
   xlabel('x');
