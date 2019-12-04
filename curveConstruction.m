@@ -54,6 +54,26 @@ function testSimpleHelix(a,b)
   plotCurve3(simpleHelix);
 end
 
+function testViviani()
+  v     = @(t) sqrt(1 + cos(t)^2);
+  kappa = @(t) sqrt(5 + 3 * cos(t)^2) / (1 + cos(t)^2)^(3/2);
+  tau   = @(t) (6*cos(t)) / (5 + 3 * cos(t)^2);
+  
+  range = linspace(0,2*pi,1000);
+
+  vivianiCurve = viviani()(range);
+  
+  e0  = [0, 1/sqrt(2), 1/sqrt(2)];
+  n0  = [-1, 0, 0];
+  b0  = [0, -1/sqrt(2), 1/sqrt(2)];
+  fi0 = [1,0,0];
+  curve = constructCurve(v, kappa, tau, range, e0, n0, b0, fi0)';
+  
+  plotCurve3(curve);
+  hold on;
+  plotCurve3(vivianiCurve);
+end
+
 function R = rotateX(t)
   R = [ 1,      0,       0
       ; 0, cos(t), -sin(t)
@@ -79,6 +99,10 @@ function R = rotate(t1, t2, t3)
   R = rotateZ(t3) * rotateY(t2) * rotateX(t1);
 end
 
+################################## examples ####################################
+
+# testSimpleHelix(1,1);
+
 ##### Calculations for simple helix #####
 
 # fi = (a*cos(t), a*sin(t), b*t)
@@ -86,21 +110,51 @@ end
 # fi'(0) = (0, a, b)
 # |fi'(0)| = sqrt(a^2 + b^2)
 # 
+# c = a^2 + b^2
 # a = b = 1
-# e(0) = (0, 1/sqrt(2), 1/sqrt(2))
+# e(0) = (0, a/sqrt(c), b/sqrt(c))
 # 
 # fi'' = (-a*cos(t), -a*sin(t), 0)
 # fi''(0) = (-a, 0, 0)
-# <fi''(0), e(0)> = 0*(-a) + 0*(1/sqrt(2)) + 0*(1/sqrt(2)) = 0
+# <fi''(0), e(0)> = 0*(-a) + 0*(a/sqrt(c)) + 0*(b/sqrt(c)) = 0
 # n*(0) = (-1, 0, 0)
 # n(0) = (-1, 0, 0) 
 # 
-# b(0) = e(0) * n(0) = 0*e1 - 1/sqrt(2) * e2  - 1/sqrt(2) * e3 = (0, -1/sqrt(2), 1/sqrt(2))
+# b(0) = e(0) * n(0) = 0*e1 - b/sqrt(c) * e2  + a/sqrt(c) * e3 = (0, -b/sqrt(c), a/sqrt(c))
 # 
+# e1       e2       e3 
+# 0    a/sqrt(c)  b/sqrt(c)
+# -1       0         0 
+# 
+# e(0) = (0, a/sqrt(c), a/sqrt(c))
+# n(0) = (-1, 0, 0) 
+# b(0) = (0, -b/sqrt(2), a/sqrt(c))
+
+
+
+
+
+##### Calculations for Viviani curve #####
+
+# fi   = (cos(t)^2, cos(t)*sin(t), sin(ts))
+# fi'  = (-2*sin(t)*cos(t), cos(t)^2 - sin(t)^2, cos(t))
+# fi'' = (-2*cos(2t), -2*sin(2t), -sin(t))
+
+# fi'(0)   = (0, 1, 1)
+# |fi'(0)| = sqrt(2)
+
+# e(0)    = (0, 1/sqrt(2), 1/sqrt(2))
+# fi''(0) = (-2, 0, 0) 
+# <fi''(0), e(0)> = (0,0,0)
+# n*(0) = fi''(0) - <fi''(0), e(0)> * e(0) = (-2,0,0)
+# n(0) = (-1,0,0)
+
+# b(0) = 0*e1 - (1/sqrt(2))*e2 + (1/sqrt(2))*e3 
+
 # e1       e2       e3 
 # 0    1/sqrt(2)  1/sqrt(2)
 # -1       0         0 
-# 
+
 # e(0) = (0, 1/sqrt(2), 1/sqrt(2))
-# n(0) = (-1, 0, 0) 
+# n(0) = (-1,0,0)
 # b(0) = (0, -1/sqrt(2), 1/sqrt(2))
