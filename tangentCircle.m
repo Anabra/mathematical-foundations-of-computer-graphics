@@ -192,6 +192,10 @@ function [CPS, RS, ES, NS] = tangentCircle3(f, ts)
 end
 
 function plotCurve3(curve)
+  if (rows(curve) != 3)
+    curve = curve';
+  end
+  
   xs = curve(1,:);
   ys = curve(2,:);
   zs = curve(3,:);
@@ -263,4 +267,19 @@ end
 function FUN = helix3D(a)
   r   = @(ts) a*ts;
   FUN = @(ts) [r(ts).*cos(ts); r(ts).*sin(ts); ts];
+end
+
+# a, b are given constants
+# v     = @(t) sqrt(a^2 + b^2)
+# kappa = @(t) abs(a) / (a^2 + b^2)
+# tau   = @(t) b / (a^2 + b^2) 
+function FUN = simpleHelix3D(a,b)
+  FUN = @(ts) [a*cos(ts); a*sin(ts); b*ts];
+end
+
+# v     = @(t) sqrt(1 + cos(t)^2)
+# kappa = @(t) sqrt(5 + 3*cos(t)^2) / (1 + cos(t)^2)^(3/2)
+# tau   = @(t) 6*cos(t) / (5 + 3*cos(t))
+function FUN = viviani()
+  FUN = @(ts) [cos(ts).^2; cos(ts).*sin(ts); sin(ts)];
 end
